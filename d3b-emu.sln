@@ -45,6 +45,6 @@ Global
 		SolutionGuid = {9AC6E6CF-E5B8-4EC0-A383-2ADF01A5F8EE}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = .\src\Mooege\Mooege-VS2010.csproj
+		StartupItem = .\src\d3b-emu\d3b-emu.csproj
 	EndGlobalSection
 EndGlobal
