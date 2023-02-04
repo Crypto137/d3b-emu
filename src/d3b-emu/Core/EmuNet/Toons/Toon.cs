@@ -206,8 +206,8 @@ namespace D3BEmu.Core.EmuNet.Toons
             this.Owner = owner;
             this.TimePlayed = timePlayed;
 
-            this.CurrentQuest = -1;
-            this.CurrentQuestStepId = -1;
+            this.CurrentQuest = currentQuest;
+            this.CurrentQuestStepId = currentQuestStepId;
 
             this.UnlockedStoneOfRecall = unlockedStoneOfRecall;
             this.UnlockedCauldronOfJordan = unlockedCauldronOfJordan;
