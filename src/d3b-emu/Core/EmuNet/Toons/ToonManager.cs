@@ -106,7 +106,8 @@ namespace D3BEmu.Core.EmuNet.Toons
                 var databaseId = (ulong)reader.GetInt64(0);
                 ToonSkillSet skillSet = ToonSkillSets[databaseId];
                 var toon = new Toon(databaseId, reader.GetString(1), reader.GetInt32(7), reader.GetByte(2), reader.GetByte(3), reader.GetByte(4), reader.GetInt32(5), reader.GetInt64(6), (uint)reader.GetInt32(8),
-                    reader.GetBoolean(9), reader.GetBoolean(10), reader.GetBoolean(11), skillSet);
+                    reader.GetInt32(9), reader.GetInt32(10),
+                    reader.GetBoolean(11), reader.GetBoolean(12), reader.GetBoolean(13), skillSet);
                 Toons.Add(databaseId, toon);
             }
         }

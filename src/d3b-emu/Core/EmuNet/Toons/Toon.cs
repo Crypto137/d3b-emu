@@ -86,8 +86,8 @@ namespace D3BEmu.Core.EmuNet.Toons
                                 .SetHighestUnlockedAct(0)
                                 .SetLastPlayedDifficulty(0)
                                 .SetHighestUnlockedDifficulty(0)
-                                .SetLastPlayedQuest(-1)
-                                .SetLastPlayedQuestStep(-1)
+                                .SetLastPlayedQuest(this.CurrentQuest)
+                                .SetLastPlayedQuestStep(this.CurrentQuestStepId)
                                 .SetTimePlayed(this.TimePlayed)
 
                                 .AddQuestHistory(new D3.Hero.QuestHistoryEntry.Builder().SetDifficulty(0).SetSnoQuest(GS.Games.Quest.ProtectorOfTristram))
@@ -118,10 +118,12 @@ namespace D3BEmu.Core.EmuNet.Toons
         }
 
         public Toon(ulong persistentId, string name, int hashCode, byte @class, byte gender, byte level, int experience, long accountId, uint timePlayed,     // Toon with given persistent ID
+            int currentQuest, int currentQuestStepId,
             bool unlockedStoneOfRecall, bool unlockedCauldronOfJordan, bool unlockedNephalemCube, ToonSkillSet skillSet) 
             : base(persistentId)
         {
             this.SetFields(name, hashCode, (ToonClass)@class, (ToonFlags)gender, level, experience, AccountManager.GetAccountByPersistentID((ulong)accountId), timePlayed,
+                currentQuest, currentQuestStepId,
                 unlockedStoneOfRecall, unlockedCauldronOfJordan, unlockedNephalemCube, skillSet);
         }
 
@@ -187,6 +189,7 @@ namespace D3BEmu.Core.EmuNet.Toons
         private static readonly GameBalance HeroData = (GameBalance)MPQStorage.Data.Assets[GS.Common.Types.SNO.SNOGroup.GameBalance][19740].Data;
 
         private void SetFields(string name, int hashCode, ToonClass @class, ToonFlags flags, byte level, int experience, Account owner, uint timePlayed,
+            int currentQuest, int currentQuestStepId,
             bool unlockedStoneOfRecall, bool unlockedCauldronOfJordan, bool unlockedNephalemCube, ToonSkillSet skillSet)
         {
             this.ToonHandle = new ToonHandleHelper(this.PersistentID);
@@ -202,6 +205,9 @@ namespace D3BEmu.Core.EmuNet.Toons
             this.ExperienceNext = experience;
             this.Owner = owner;
             this.TimePlayed = timePlayed;
+
+            this.CurrentQuest = -1;
+            this.CurrentQuestStepId = -1;
 
             this.UnlockedStoneOfRecall = unlockedStoneOfRecall;
             this.UnlockedCauldronOfJordan = unlockedCauldronOfJordan;
@@ -230,7 +236,7 @@ namespace D3BEmu.Core.EmuNet.Toons
         private void SetFields(string name, int hashCode, ToonClass @class, ToonFlags flags, byte level, Account owner, uint timePlayed)
         {
             ToonSkillSet skillSet = new ToonSkillSet(@class);
-            this.SetFields(name, hashCode, @class, flags, level, Player.LevelBorders[level], owner, timePlayed, false, false, false, skillSet);
+            this.SetFields(name, hashCode, @class, flags, level, Player.LevelBorders[level], owner, timePlayed, -1, -1, false, false, false, skillSet);
         }
 
         #endregion
@@ -478,8 +484,9 @@ namespace D3BEmu.Core.EmuNet.Toons
                 {
                     var query =
                         string.Format(
-                            "UPDATE toons SET name='{1}', hashCode={2}, class={3}, gender={4}, level={5}, experience={6}, accountId={7}, timePlayed={8}, unlockedStoneOfRecall={9}, unlockedCauldronOfJordan={10}, unlockedNephalemCube={11} WHERE id={0}",
+                            "UPDATE toons SET name='{1}', hashCode={2}, class={3}, gender={4}, level={5}, experience={6}, accountId={7}, timePlayed={8}, currentQuest={9}, currentQuestStepId={10}, unlockedStoneOfRecall={11}, unlockedCauldronOfJordan={12}, unlockedNephalemCube={13} WHERE id={0}",
                             PersistentID, Name, HashCode, (byte)Class, (byte)Gender, Level, ExperienceNext, Owner.PersistentID, TimePlayed,
+                            CurrentQuest, CurrentQuestStepId,
                             Convert.ToInt32(UnlockedStoneOfRecall), Convert.ToInt32(UnlockedCauldronOfJordan), Convert.ToInt32(UnlockedNephalemCube));
 
                     var cmd = new SQLiteCommand(query, DBManager.Connection);
@@ -499,8 +506,9 @@ namespace D3BEmu.Core.EmuNet.Toons
                 {
                     var query =
                         string.Format(
-                            "INSERT INTO toons (id, name, hashCode, class, gender, level, experience, accountId, timePlayed, unlockedStoneOfRecall, unlockedCauldronOfJordan, unlockedNephalemCube) VALUES({0},'{1}',{2},{3},{4},{5},{6},{7},{8},{9},{10},{11})",
+                            "INSERT INTO toons (id, name, hashCode, class, gender, level, experience, accountId, timePlayed, currentQuest, currentQuestStepId, unlockedStoneOfRecall, unlockedCauldronOfJordan, unlockedNephalemCube) VALUES({0},'{1}',{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13})",
                             PersistentID, Name, HashCode, (byte)Class, (byte)Gender, Level, ExperienceNext, Owner.PersistentID, TimePlayed,
+                            CurrentQuest, CurrentQuestStepId,
                             Convert.ToInt32(UnlockedStoneOfRecall), Convert.ToInt32(UnlockedCauldronOfJordan), Convert.ToInt32(UnlockedNephalemCube));
 
                     var cmd = new SQLiteCommand(query, DBManager.Connection);
