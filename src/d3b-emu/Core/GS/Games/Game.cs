@@ -274,8 +274,14 @@ namespace D3BEmu.Core.GS.Games
                             }
             });
 
-            joinedPlayer.EnterWorld(this.StartingWorld.StartingPoints.First().Position);
-            //joinedPlayer.EnterWorld(this.StartingWorld.StartingPoints.Find(x => x.ActorSNO.Name == "Start_Location_Team_0").Position);
+            if (joinedPlayer.Toon.CurrentQuest != -1)
+            {
+                joinedPlayer.EnterWorld(this.StartingWorld.StartingPoints.First().Position);
+            }
+            else
+            {
+                joinedPlayer.EnterWorld(this.StartingWorld.StartingPoints.Find(x => x.ActorSNO.Name == "Start_Location_Team_0").Position);
+            }
             
             joinedPlayer.InGameClient.TickingEnabled = true; // it seems bnet-servers only start ticking after player is completely in-game. /raist
 
