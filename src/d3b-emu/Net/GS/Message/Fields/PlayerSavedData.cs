@@ -22,12 +22,12 @@ namespace D3BEmu.Net.GS.Message.Fields
     public class PlayerSavedData
     {
         // MaxLength = 9
-        public HotbarButtonData[] HotBarButtons;
+        public HotbarButtonData[] HotbarButtons;
         // MaxLength = 15
-        public SkillKeyMapping[] SkilKeyMappings;
+        public SkillKeyMapping[] SkillKeyMappings;
         public int PlaytimeTotal;
         public int WaypointFlags;
-        public HirelingSavedData Field4;
+        public HirelingSavedData HirelingSavedData;
         public int Field5;
         public LearnedLore LearnedLore;
         // MaxLength = 6
@@ -40,22 +40,22 @@ namespace D3BEmu.Net.GS.Message.Fields
 
         public void Parse(GameBitBuffer buffer)
         {
-            HotBarButtons = new HotbarButtonData[9];
-            for (int i = 0; i < HotBarButtons.Length; i++)
+            HotbarButtons = new HotbarButtonData[9];
+            for (int i = 0; i < HotbarButtons.Length; i++)
             {
-                HotBarButtons[i] = new HotbarButtonData();
-                HotBarButtons[i].Parse(buffer);
+                HotbarButtons[i] = new HotbarButtonData();
+                HotbarButtons[i].Parse(buffer);
             }
-            SkilKeyMappings = new SkillKeyMapping[15];
-            for (int i = 0; i < SkilKeyMappings.Length; i++)
+            SkillKeyMappings = new SkillKeyMapping[15];
+            for (int i = 0; i < SkillKeyMappings.Length; i++)
             {
-                SkilKeyMappings[i] = new SkillKeyMapping();
-                SkilKeyMappings[i].Parse(buffer);
+                SkillKeyMappings[i] = new SkillKeyMapping();
+                SkillKeyMappings[i].Parse(buffer);
             }
             PlaytimeTotal = buffer.ReadInt(32);
             WaypointFlags = buffer.ReadInt(32);
-            Field4 = new HirelingSavedData();
-            Field4.Parse(buffer);
+            HirelingSavedData = new HirelingSavedData();
+            HirelingSavedData.Parse(buffer);
             Field5 = buffer.ReadInt(32);
             LearnedLore = new LearnedLore();
             LearnedLore.Parse(buffer);
@@ -71,17 +71,17 @@ namespace D3BEmu.Net.GS.Message.Fields
 
         public void Encode(GameBitBuffer buffer)
         {
-            for (int i = 0; i < HotBarButtons.Length; i++)
+            for (int i = 0; i < HotbarButtons.Length; i++)
             {
-                HotBarButtons[i].Encode(buffer);
+                HotbarButtons[i].Encode(buffer);
             }
-            for (int i = 0; i < SkilKeyMappings.Length; i++)
+            for (int i = 0; i < SkillKeyMappings.Length; i++)
             {
-                SkilKeyMappings[i].Encode(buffer);
+                SkillKeyMappings[i].Encode(buffer);
             }
             buffer.WriteInt(32, PlaytimeTotal);
             buffer.WriteInt(32, WaypointFlags);
-            Field4.Encode(buffer);
+            HirelingSavedData.Encode(buffer);
             buffer.WriteInt(32, Field5);
             LearnedLore.Encode(buffer);
             for (int i = 0; i < snoActiveSkills.Length; i++) buffer.WriteInt(32, snoActiveSkills[i]);
@@ -100,9 +100,9 @@ namespace D3BEmu.Net.GS.Message.Fields
             b.AppendLine("Field0:");
             b.Append(' ', pad);
             b.AppendLine("{");
-            for (int i = 0; i < HotBarButtons.Length; i++)
+            for (int i = 0; i < HotbarButtons.Length; i++)
             {
-                HotBarButtons[i].AsText(b, pad + 1);
+                HotbarButtons[i].AsText(b, pad + 1);
                 b.AppendLine();
             }
             b.Append(' ', pad);
@@ -112,9 +112,9 @@ namespace D3BEmu.Net.GS.Message.Fields
             b.AppendLine("Field1:");
             b.Append(' ', pad);
             b.AppendLine("{");
-            for (int i = 0; i < SkilKeyMappings.Length; i++)
+            for (int i = 0; i < SkillKeyMappings.Length; i++)
             {
-                SkilKeyMappings[i].AsText(b, pad + 1);
+                SkillKeyMappings[i].AsText(b, pad + 1);
                 b.AppendLine();
             }
             b.Append(' ', pad);
@@ -124,7 +124,7 @@ namespace D3BEmu.Net.GS.Message.Fields
             b.AppendLine("PlaytimeTotal: 0x" + PlaytimeTotal.ToString("X8"));
             b.Append(' ', pad);
             b.AppendLine("WaypointFlags: 0x" + WaypointFlags.ToString("X8") + " (" + WaypointFlags + ")");
-            Field4.AsText(b, pad);
+            HirelingSavedData.AsText(b, pad);
             b.Append(' ', pad);
             b.AppendLine("Field5: 0x" + Field5.ToString("X8") + " (" + Field5 + ")");
             LearnedLore.AsText(b, pad);

@@ -629,7 +629,7 @@ namespace D3BEmu.Core.GS.Players
             //scripted //this.Attributes[GameAttribute.Skill_Total, message.SNOSkill] = 1;
             this.Attributes.BroadcastChangedIfRevealed();
 
-            foreach (HotbarButtonData button in this.SkillSet.HotBarSkills.Where(button => button.SNOSkill == oldSNOSkill && button.SNOSkill != Skills.Skills.None)) // loop through hotbar and replace the old skill with new one
+            foreach (HotbarButtonData button in this.SkillSet.HotbarSkills.Where(button => button.SNOSkill == oldSNOSkill && button.SNOSkill != Skills.Skills.None)) // loop through hotbar and replace the old skill with new one
             {
                 button.SNOSkill = message.SNOSkill;
             }
@@ -661,7 +661,7 @@ namespace D3BEmu.Core.GS.Players
 
         private void OnPlayerChangeHotbarButtonMessage(GameClient client, PlayerChangeHotbarButtonMessage message)
         {
-            this.SkillSet.HotBarSkills[message.BarIndex] = message.ButtonData;
+            this.SkillSet.HotbarSkills[message.BarIndex] = message.ButtonData;
         }
 
         private void OnObjectTargeted(GameClient client, TargetMessage message)
@@ -1027,9 +1027,9 @@ namespace D3BEmu.Core.GS.Players
                 Field0 = 0x00000000,
                 Field1 = 0x00000000,
                 Field2 = 0x00000000,
-                Gender = Toon.Gender,
+                PlayerFlags = (int)Toon.Flags,
                 PlayerSavedData = this.GetSavedData(),
-                Field5 = 0x00000000,
+                QuestRewardHistoryEntriesCount = 0x00000000,
                 tQuestRewardHistory = QuestRewardHistory,
             };
         }
@@ -1142,13 +1142,13 @@ namespace D3BEmu.Core.GS.Players
         {
             return new PlayerSavedData()
             {
-                HotBarButtons = this.SkillSet.HotBarSkills,
-                SkilKeyMappings = this.SkillKeyMappings,
+                HotbarButtons = this.SkillSet.HotbarSkills,
+                SkillKeyMappings = this.SkillKeyMappings,
 
                 PlaytimeTotal = (int)this.Toon.TimePlayed,
                 WaypointFlags = 0x7FFFFFFF,
 
-                Field4 = new HirelingSavedData()
+                HirelingSavedData = new HirelingSavedData()
                 {
                     HirelingInfos = this.HirelingInfo,
                     Field1 = 0x00000000,

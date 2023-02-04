@@ -134,7 +134,7 @@ namespace D3BEmu.Core.EmuNet.Toons
 
             for (int i = 0; i < HotbarButtons.Length; i++)      // Hotbar buttons
             {
-                HotbarButtons[i] = skillSet.HotBarSkills[i].SNOSkill;
+                HotbarButtons[i] = skillSet.HotbarSkills[i].SNOSkill;
             }
         }
     }

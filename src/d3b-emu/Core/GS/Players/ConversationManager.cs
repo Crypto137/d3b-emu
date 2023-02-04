@@ -299,7 +299,7 @@ namespace D3BEmu.Core.GS.Players
                     Field11 = 0x00000000,  // is this field I1? and if...what does it do?? 2 for level up -farmy
                     AnimationTag = currentLineNode.AnimationTag,
                     Duration = duration,
-                    Field14 = currentUniqueLineID,
+                    Id = currentUniqueLineID,
                     Field15 = 0x00000000        // dont know, 0x32 for level up
                 },
                 Duration = duration,

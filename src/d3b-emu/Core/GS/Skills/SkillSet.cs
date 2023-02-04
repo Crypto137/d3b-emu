@@ -25,7 +25,7 @@ namespace D3BEmu.Core.GS.Skills
     {
         public int[] ActiveSkills { get; set; }
         public int[] PassiveSkills { get; set; }
-        public HotbarButtonData[] HotBarSkills { get; set; }
+        public HotbarButtonData[] HotbarSkills { get; set; }
 
         public SkillSet(ToonSkillSet toonSkillSet)
         {
@@ -44,7 +44,7 @@ namespace D3BEmu.Core.GS.Skills
                 toonSkillSet.PassiveSkills[2]
             };
 
-            HotBarSkills = new HotbarButtonData[9] {
+            HotbarSkills = new HotbarButtonData[9] {
                 new HotbarButtonData { SNOSkill = toonSkillSet.HotbarButtons[0], ItemGBId = -1 }, // left-click
                 new HotbarButtonData { SNOSkill = toonSkillSet.HotbarButtons[1], ItemGBId = -1 }, // right-click
                 new HotbarButtonData { SNOSkill = toonSkillSet.HotbarButtons[2], ItemGBId = -1 }, // hidden-bar - left-click switch - which key??
