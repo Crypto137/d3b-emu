@@ -284,45 +284,6 @@ namespace D3BEmu.Core.GS.Games
             }
             
             joinedPlayer.InGameClient.TickingEnabled = true; // it seems bnet-servers only start ticking after player is completely in-game. /raist
-
-            #region Starting equipment hack
-            // Hack: generate and equip starting equipment for joined players
-            string startingWeaponName = "";
-
-            switch (joinedPlayer.Toon.Class)
-            {
-                case EmuNet.Toons.ToonClass.Barbarian:
-                    startingWeaponName = "Axe_1H_000";
-                    break;
-                case EmuNet.Toons.ToonClass.DemonHunter:
-                    startingWeaponName = "HandXbow_001";
-                    break;
-                case EmuNet.Toons.ToonClass.Monk:
-                    startingWeaponName = "FistWeapon_1H_001";
-                    break;
-                case EmuNet.Toons.ToonClass.WitchDoctor:
-                    startingWeaponName = "CeremonialDagger_1H_001";
-                    break;
-                case EmuNet.Toons.ToonClass.Wizard:
-                    startingWeaponName = "Wand_001";
-                    break;
-            }
-
-            if (startingWeaponName != "")
-            {
-                Item startingWeapon = ItemGenerator.Cook(joinedPlayer, startingWeaponName);
-                startingWeapon.Reveal(joinedPlayer);
-                joinedPlayer.Inventory.PickUp(startingWeapon);
-            }
-
-            // Also give barbarians a shield
-            if (joinedPlayer.Toon.Class == EmuNet.Toons.ToonClass.Barbarian)
-            {
-                Item startingShield = ItemGenerator.Cook(joinedPlayer, "Shield_001");
-                startingShield.Reveal(joinedPlayer);
-                joinedPlayer.Inventory.PickUp(startingShield);
-            }
-            #endregion
         }
 
         /// <summary>

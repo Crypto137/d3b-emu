@@ -748,6 +748,43 @@ namespace D3BEmu.Core.GS.Players
             }
             */
 
+            #region Starting equipment hack
+            // Hack: generate starting equipment and add it to the inventory grid
+            string startingWeaponName = "";
+
+            switch (_owner.Toon.Class)
+            {
+                case EmuNet.Toons.ToonClass.Barbarian:
+                    startingWeaponName = "Axe_1H_000";
+                    break;
+                case EmuNet.Toons.ToonClass.DemonHunter:
+                    startingWeaponName = "HandXbow_001";
+                    break;
+                case EmuNet.Toons.ToonClass.Monk:
+                    startingWeaponName = "FistWeapon_1H_001";
+                    break;
+                case EmuNet.Toons.ToonClass.WitchDoctor:
+                    startingWeaponName = "CeremonialDagger_1H_001";
+                    break;
+                case EmuNet.Toons.ToonClass.Wizard:
+                    startingWeaponName = "Wand_001";
+                    break;
+            }
+
+            if (startingWeaponName != "")
+            {
+                item = ItemGenerator.Cook(_owner, startingWeaponName);
+                _inventoryGrid.AddItem(item);
+            }
+
+            // Also give barbarians a shield
+            if (_owner.Toon.Class == EmuNet.Toons.ToonClass.Barbarian)
+            {
+                item = ItemGenerator.Cook(_owner, "Shield_001");
+                _inventoryGrid.AddItem(item);
+            }
+            #endregion
+
             this._inventoryGold = ItemGenerator.CreateGold(this._owner, goldAmount);
             this._inventoryGold.Attributes[GameAttribute.ItemStackQuantityLo] = goldAmount; // This is the attribute that makes the gold visible in game
             this._inventoryGold.Owner = _owner;
