@@ -687,8 +687,6 @@ namespace D3BEmu.Core.GS.Players
             //_stashGrid.Clear();
             //_inventoryGrid.Clear();
 
-
-
             // first of all load stash size
 
             var slots = _owner.Toon.Owner.StashSize;
@@ -774,14 +772,16 @@ namespace D3BEmu.Core.GS.Players
             if (startingWeaponName != "")
             {
                 item = ItemGenerator.Cook(_owner, startingWeaponName);
-                _inventoryGrid.AddItem(item);
+                item.Reveal(_owner);    // Need to reveal the item, or else the client will crash
+                _equipment.EquipItem(item, (int)EquipmentSlotId.Main_Hand);
             }
 
             // Also give barbarians a shield
             if (_owner.Toon.Class == EmuNet.Toons.ToonClass.Barbarian)
             {
                 item = ItemGenerator.Cook(_owner, "Shield_001");
-                _inventoryGrid.AddItem(item);
+                item.Reveal(_owner);
+                _equipment.EquipItem(item, (int)EquipmentSlotId.Off_Hand);
             }
             #endregion
 
