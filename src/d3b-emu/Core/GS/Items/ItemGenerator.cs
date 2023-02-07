@@ -146,6 +146,20 @@ namespace D3BEmu.Core.GS.Items
             return CreateItem(player, itemDefinition);
         }
 
+        // Generates a premade item using the specified gbid and serialized affixes and attributes
+        public static Item GeneratePremadeItem(Player owner, int gbId, string affixesSer, string attributesSer)
+        {
+            var table = Items[gbId];
+            var item = new Item(owner.World, table, DeSerializeAffixList(affixesSer), attributesSer);
+
+            /*if (!owner.World.DbItems.ContainsKey(owner.World))
+                owner.World.DbItems.Add(owner.World, new List<Item>());
+            if (!owner.World.DbItems[owner.World].Contains(item))
+                owner.World.DbItems[owner.World].Add(item);*/
+
+            return item;
+        }
+
         private static ItemTable GetRandom(List<ItemTable> pool)
         {
             var found = false;
