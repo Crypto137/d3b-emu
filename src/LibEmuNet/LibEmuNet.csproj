@@ -34,7 +34,7 @@
     </Reference>
     <Reference Include="Google.ProtocolBuffers, Version=2.3.0.277, Culture=neutral, PublicKeyToken=17b3b1f090c3ea48">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dep\Google.ProtocolBuffers.dll</HintPath>
+      <HintPath>..\..\dep\protobuf-csharp\Google.ProtocolBuffers.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
