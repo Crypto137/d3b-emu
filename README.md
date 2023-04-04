@@ -1,6 +1,10 @@
 # d3b-emu
 
-d3b-emu is an open-source server emulator for Diablo III Beta. The only supported version of the client is **0.3.0.7447** (Beta Patch 4).
+d3b-emu is an open-source server emulator for Diablo III Beta.
+
+The only supported version of the client is **0.3.0.7447** (Beta Patch 4).
+
+See the [wiki](https://github.com/Crypto137/d3b-emu/wiki) for more details.
 
 ## Features
 
