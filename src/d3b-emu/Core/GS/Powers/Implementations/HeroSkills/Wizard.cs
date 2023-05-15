@@ -32,7 +32,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
 {
     #region Rapid Cast
 
-    // 9359 implementation + flat damage
+    // 9359 implementation + 7447 calculations, original note below
     //Complete: it's fine the way homing missile is implemented for now until we see really how runes work.
     #region Magic Missile
     [ImplementsPowerSNO(Skills.Skills.Wizard.RapidCast.MagicMissile)]
@@ -40,7 +40,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
     {
         public override IEnumerable<TickTimer> Main()
         {
-            //No more resource cost
+            UsePrimaryResource(EvalTag(PowerKeys.ResourceCost));
             User.PlayEffectGroup(19305); // cast effect
             if (Rune_B > 0)
             {
@@ -54,7 +54,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
                     {
                         SpawnEffect(99572, new Vector3D(hit.Position.X, hit.Position.Y, hit.Position.Z + 5f)); // impact effect (fix height)
                         proj.Destroy();
-                        Damage(hit, ScriptFormula(1), ScriptFormula(2), DamageType.Arcane);
+                        Damage(hit, ScriptFormula(17), ScriptFormula(18), DamageType.Arcane);
                     };
                     yield return WaitTicks(1); //TODO: We need less than 100MS Update.
                 }
@@ -71,7 +71,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
                     {
                         SpawnEffect(99572, new Vector3D(hit.Position.X, hit.Position.Y, hit.Position.Z + 5f)); // impact effect (fix height)
                         projectile.Destroy();
-                        Damage(hit, ScriptFormula(1), ScriptFormula(2), DamageType.Arcane);
+                        Damage(hit, ScriptFormula(3), ScriptFormula(2), DamageType.Arcane);
                     };
                 }
                 else
@@ -81,7 +81,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
                     {
                         SpawnEffect(99572, new Vector3D(hit.Position.X, hit.Position.Y, hit.Position.Z + 5f)); // impact effect (fix height)
                         projectile.Destroy();
-                        Damage(hit, ScriptFormula(1), ScriptFormula(2), DamageType.Arcane);
+                        Damage(hit, ScriptFormula(3), ScriptFormula(2), DamageType.Arcane);
                     };
 
                     for (int i = 0; i < 2; i++)
@@ -97,7 +97,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
                             {
                                 SpawnEffect(99572, new Vector3D(hit.Position.X, hit.Position.Y, hit.Position.Z + 5f)); // impact effect (fix height)
                                 projectileSeek.Destroy();
-                                Damage(hit, ScriptFormula(1), ScriptFormula(2), DamageType.Arcane);
+                                Damage(hit, ScriptFormula(3), ScriptFormula(2), DamageType.Arcane);
                             };
                             i = 1;
                         }
@@ -113,7 +113,15 @@ namespace D3BEmu.Core.GS.Powers.Implementations
                 projectile.OnCollision = (hit) =>
                 {
                     SpawnEffect(99572, new Vector3D(hit.Position.X, hit.Position.Y, hit.Position.Z + 5f)); // impact effect (fix height)
-                    Damage(hit, ScriptFormula(1), ScriptFormula(2), DamageType.Arcane);
+
+                    if (Rune_A > 0)
+                    {
+                        Damage(hit, ScriptFormula(1), ScriptFormula(0), DamageType.Arcane);
+                    }
+                    else
+                    {
+                        Damage(hit, ScriptFormula(14), ScriptFormula(15), DamageType.Arcane);
+                    }
 
                     if (Rune_D > 0)
                     {
@@ -122,11 +130,11 @@ namespace D3BEmu.Core.GS.Powers.Implementations
 
                     if (Rune_C > 0)
                     {
-                        if (Rand.NextDouble() < ScriptFormula(12))
+                        if (Rand.NextDouble() > ScriptFormula(12))
                         {
                             //this is actually how i think it should work, pierce first target, if addition targets behind enemy, will continue to do damage to them as well.
+                            projectile.Destroy();
                         }
-                        projectile.Destroy();
                     }
                     else
                         projectile.Destroy();
