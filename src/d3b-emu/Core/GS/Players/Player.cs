@@ -912,10 +912,10 @@ namespace D3BEmu.Core.GS.Players
                 if (actor.Visible == false || actor.IsRevealedToPlayer(this)) // if the actors is already revealed, skip it.
                     continue;
 
-                if (actor.ActorType == ActorType.Gizmo || actor.ActorType == ActorType.Player 
-                    || actor.ActorType == ActorType.Monster || actor.ActorType == ActorType.Enviroment 
-                    || actor.ActorType == ActorType.Critter || actor.ActorType == ActorType.Item)
+                if (actor.ActorType != ActorType.ClientEffect && actor.ActorType != ActorType.AxeSymbol && actor.ActorType != ActorType.CustomBrain)
+                {
                     actor.Reveal(this);
+                }
             }
         }
 
