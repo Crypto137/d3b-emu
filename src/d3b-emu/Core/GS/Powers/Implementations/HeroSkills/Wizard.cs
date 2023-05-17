@@ -1306,7 +1306,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
 
     #region Utility
 
-    // 9359 Implementation
+    // 9359 implementation + 7447 calculations
     //Complete, just need attributes and buffs checked.
     #region Frost Nova
     [ImplementsPowerSNO(Skills.Skills.Wizard.Utility.FrostNova)]
@@ -1314,17 +1314,18 @@ namespace D3BEmu.Core.GS.Powers.Implementations
     {
         public override IEnumerable<TickTimer> Run()
         {
+            //No Resource Cost
+            StartCooldown(WaitSeconds((Rune_D > 0) ? ScriptFormula(3) : ScriptFormula(4)));
+
             if (Rune_C > 0)
             {
-                //No Resouce Cost
-                StartCooldown(WaitSeconds(ScriptFormula(3)));
                 var frozenMist = SpawnEffect(RuneSelect(4402, 189047, 189048, 75631, 189049, 189050), User.Position, 0, WaitSeconds(ScriptFormula(9)));
                 frozenMist.UpdateDelay = 1f;
                 frozenMist.OnUpdate = () =>
                 {
                     AttackPayload attack = new AttackPayload(this);
                     attack.Targets = GetEnemiesInRadius(User.Position, ScriptFormula(6));
-                    attack.AddWeaponDamage(ScriptFormula(11), DamageType.Cold);
+                    attack.AddDamage(ScriptFormula(11), 0.0f, DamageType.Cold);
                     attack.OnHit = hitPayload =>
                     {
                         AddBuff(hitPayload.Target, new DebuffChilled(ScriptFormula(5), WaitSeconds(ScriptFormula(9))));
@@ -1334,11 +1335,10 @@ namespace D3BEmu.Core.GS.Powers.Implementations
             }
             else
             {
-                StartCooldown(WaitSeconds(ScriptFormula(3)));
                 SpawnEffect(RuneSelect(4402, 189047, 189048, 75631, 189049, 189050), User.Position);
                 AttackPayload attack = new AttackPayload(this);
                 attack.Targets = GetEnemiesInRadius(User.Position, ScriptFormula(6));
-                attack.AddWeaponDamage(0.65f, DamageType.Cold);
+                attack.AddDamage(ScriptFormula(0), ScriptFormula(1), DamageType.Cold);
                 attack.OnHit = hit =>
                 {
                     AddBuff(hit.Target, new DebuffFrozen(WaitSeconds(ScriptFormula(2))));
@@ -1368,7 +1368,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
                             {
                                 //does this work? hitPayload.Target.Position, will that get the target that dies?
                                 SpawnEffect(189048, hitPayload.Target.Position);
-                                WeaponDamage(GetEnemiesInRadius(hitPayload.Target.Position, ScriptFormula(15)), ScriptFormula(7), DamageType.Cold);
+                                Damage(GetEnemiesInRadius(hitPayload.Target.Position, ScriptFormula(15)), ScriptFormula(7), ScriptFormula(10), DamageType.Cold);
                             }
                         }
                     }
