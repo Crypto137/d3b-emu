@@ -32,13 +32,13 @@ namespace D3BEmu.Core.GS.Actors.Implementations
     /// </summary>
     class DestructibleLootContainer : Gizmo
     {
-        private TreasureClass TreasureClass;
+        private TreasureClass _treasureClass;
 
         public DestructibleLootContainer(World world, int snoId, TagMap tags)
             : base(world, snoId, tags)
         {
             if (ActorData.TagMap.ContainsKey(ActorKeys.LootTreasureClass))
-                TreasureClass = (TreasureClass)ActorData.TagMap[ActorKeys.LootTreasureClass].Target;
+                _treasureClass = (TreasureClass)ActorData.TagMap[ActorKeys.LootTreasureClass].Target;
         }
 
         public void ReceiveDamage(Actor source, float damage /* critical, type */)
@@ -64,8 +64,8 @@ namespace D3BEmu.Core.GS.Actors.Implementations
 
         public void Die()
         {
-            if(this.TreasureClass != null)
-                foreach(var player in this.GetPlayersInRange(30))
+            if(this._treasureClass != null)
+                foreach (var player in this.GetPlayersInRange(30))
                     //World.DropItem(this, null, this.TreasureClass.CreateDrop(player));
                     World.DropItem(this, null, ItemGenerator.GenerateRandom(player));   // Generate completely random items for now
 

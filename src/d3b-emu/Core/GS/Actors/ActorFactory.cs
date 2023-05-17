@@ -78,6 +78,8 @@ namespace D3BEmu.Core.GS.Actors
                         case GizmoGroup.Door:
                             return new Door(world, snoId, tags);
                         case GizmoGroup.DestructibleLootContainer:
+                        case GizmoGroup.Destructible:
+                        case GizmoGroup.Passive:
                         case GizmoGroup.Barricade:
                             return new DestructibleLootContainer(world, snoId, tags);
                         case GizmoGroup.Portal:
@@ -100,14 +102,13 @@ namespace D3BEmu.Core.GS.Actors
                         case GizmoGroup.StartLocations:
                             return new StartingPoint(world, snoId, tags);
 
+                        case GizmoGroup.GateGizmo:
                         case GizmoGroup.ActChangeTempObject:
                         case GizmoGroup.Banner:
                         case GizmoGroup.CathedralIdol:
-                        case GizmoGroup.Destructible:
                         case GizmoGroup.DungeonStonePortal:
                         case GizmoGroup.Headstone:
                         case GizmoGroup.HearthPortal:
-                        case GizmoGroup.Passive:
                         case GizmoGroup.PlayerSharedStash:
                         case GizmoGroup.QuestLoot:
                         case GizmoGroup.Readable:
@@ -116,8 +117,8 @@ namespace D3BEmu.Core.GS.Actors
                         case GizmoGroup.Spawner:
                         case GizmoGroup.TownPortal:
                         case GizmoGroup.Trigger:
-                        case GizmoGroup.WeirdGroup57:
-                            //Logger.Info("GizmoGroup {0} has no proper implementation, using default gizmo instead", actorData.TagMap[ActorKeys.GizmoGroup]);
+                        case GizmoGroup.ScriptObject:
+                            Logger.Info("GizmoGroup {0} has no proper implementation, using default gizmo instead", actorData.TagMap[ActorKeys.GizmoGroup]);
                             return CreateGizmo(world, snoId, tags);
                         default:
                             Logger.Warn("Unknown gizmo group {0}", actorData.TagMap[ActorKeys.GizmoGroup]);
