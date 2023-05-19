@@ -32,7 +32,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
 {
     #region Rapid Cast
 
-    // 9359 implementation + 7447 calculations, original note below
+    // 9359 implementation + 7447 calculations
     //Complete: it's fine the way homing missile is implemented for now until we see really how runes work.
     #region Magic Missile
     [ImplementsPowerSNO(Skills.Skills.Wizard.RapidCast.MagicMissile)]
@@ -339,7 +339,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
 
     #region Offensive
 
-    // 9359 Implementation
+    // 9359 implementation + 7447 calculations
     //TODO: Repelling Projectiles.
     #region Wave of Force
     [ImplementsPowerSNO(Skills.Skills.Wizard.Offensive.WaveOfForce)]
@@ -347,17 +347,26 @@ namespace D3BEmu.Core.GS.Powers.Implementations
     {
         public override IEnumerable<TickTimer> Run()
         {
-            UsePrimaryResource(ScriptFormula(26));
-            StartCooldown(WaitSeconds(ScriptFormula(30)));
+            UsePrimaryResource(EvalTag(PowerKeys.ResourceCost));
+            StartCooldown(WaitSeconds((Rune_D > 0) ? ScriptFormula(30) : ScriptFormula(29)));
 
-            yield return WaitSeconds(0.350f); // wait for wizard to land
+            yield return WaitSeconds(0.200f); // wait for the wizard to jump, originally this was set to 350ms, but that seemed a bit sluggish
 
-            //I switched the effects of obsidian and golden because in-game they are opposite
-            User.PlayEffectGroup(RuneSelect(19356, 82649, 215399, 215403, 215400, 215404));
+            // Effects 215399, 215403, 215400, 215404 for runes B, C, D and E don't seem to exist in 7447, so we reuse the default animation
+            User.PlayEffectGroup(RuneSelect(19356, 82649, 19356, 19356, 19356, 19356));
 
             AttackPayload attack = new AttackPayload(this);
             attack.Targets = GetEnemiesInRadius(User.Position, ScriptFormula(1));
-            attack.AddWeaponDamage(ScriptFormula(2), DamageType.Physical);
+
+            if (Rune_A > 0)
+            {
+                attack.AddDamage(ScriptFormula(2), ScriptFormula(3), DamageType.Physical);
+            }
+            else
+            {
+                attack.AddDamage(ScriptFormula(21), ScriptFormula(22), DamageType.Physical);
+            }
+
             //TODO: Script 6,7,8,9 (repels projectiles)
             attack.OnHit = hitPayload =>
             {
@@ -386,8 +395,8 @@ namespace D3BEmu.Core.GS.Powers.Implementations
                 {
                     if (Rand.NextDouble() < ScriptFormula(16))
                     {
-                        User.PlayEffectGroup(92798);
-                        attack.AddWeaponDamage(ScriptFormula(23), DamageType.Physical);
+                        User.PlayEffectGroup(82798);
+                        attack.AddDamage(ScriptFormula(23), ScriptFormula(24), DamageType.Physical);
                         Knockback(hitPayload.Target, ScriptFormula(0) * ScriptFormula(15), ScriptFormula(4), ScriptFormula(5));
                     }
                 }
