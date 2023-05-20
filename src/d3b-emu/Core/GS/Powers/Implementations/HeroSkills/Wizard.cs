@@ -407,7 +407,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
     }
     #endregion
 
-    // 9359 Implementation
+    // 9359 implementation + 7447 calculations
     //Complete
     #region Arcane Orb
     [ImplementsPowerSNO(Skills.Skills.Wizard.Offensive.ArcaneOrb)]
@@ -432,12 +432,21 @@ namespace D3BEmu.Core.GS.Powers.Implementations
 
                 foreach (Vector3D position in targetDirs)
                 {
-                    var proj = new Projectile(this, RuneSelect(6515, 130073, 215555, -1, 216040, 75650), User.Position);
+                    // Projectiles 215555 and 216040 originally assigned for runes B and D don't seem to exist in 7447, and 75650 used for Rune_E seems to belong to Rune_B
+                    var proj = new Projectile(this, RuneSelect(6515, 130073, 75650, -1, 6515, 6515), User.Position);
                     proj.Position.Z += 5f;  // fix height
                     proj.OnCollision = (hit) =>
                     {
                         hit.PlayEffectGroup(RuneSelect(19308, 130020, 215580, -1, 216056, -1));
-                        WeaponDamage(GetEnemiesInRadius(proj.Position, ScriptFormula(5)), ScriptFormula(3), DamageType.Arcane);
+
+                        if (Rune_A > 0 || Rune_B > 0 || Rune_E > 0)     // These three runes reuse the same formulas for damage
+                        {
+                            Damage(GetEnemiesInRadius(proj.Position, (Rune_B > 0) ? ScriptFormula(5) : ScriptFormula(5) - ScriptFormula(14)), ScriptFormula(3), ScriptFormula(4), DamageType.Arcane);
+                        }
+                        else
+                        {
+                            Damage(GetEnemiesInRadius(proj.Position, ScriptFormula(5) - ScriptFormula(14)), ScriptFormula(7), ScriptFormula(8), DamageType.Arcane);
+                        }
 
                         if (Rune_E > 0)
                         {
@@ -473,7 +482,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
                     var targets = GetEnemiesInRadius(Target.Position, 10f);
                     if (targets.Actors.Count > 0)
                     {
-                        WeaponDamage(targets, ScriptFormula(3), DamageType.Arcane);
+                        Damage(targets, ScriptFormula(3), ScriptFormula(4), DamageType.Arcane);
                         OrbitUsed();
                         return true;
                     }
