@@ -603,14 +603,14 @@ namespace D3BEmu.Core.GS.Powers.Implementations
     }
     #endregion
 
-    // 9359 Implementation
+    // 9359 implementation + 7447 calculations
     //TODO: InComplete Runes
     //Unknown if targets are supposed to seizure.. Videos dont show the seezing zombies.
     #region Disintegrate
     [ImplementsPowerSNO(Skills.Skills.Wizard.Offensive.Disintegrate)]
     public class WizardDisintegrate : ChanneledSkill
     {
-        //TODOs
+        //Old 9359 TODOs
         //Rune_A- same as NoRune.. -> todo: add the increase to damage
         //Rune-C- parabola.acr (6523.acr) and field.efg (93563.efg)?
         //Rune-D- Possibly Mini-Buff.efg/.rop and Dome.acr?
@@ -627,6 +627,11 @@ namespace D3BEmu.Core.GS.Powers.Implementations
         //(7) - AOE Weapon Dmg Scalar, (8) - AOE Radius, (21) - Cost Reduction
         //Rune_E -> Enemies killed by the beam have a 35% chance to explode causing 12800% weapon damage as Arcane to all enemies within 8 yards.
         //(9) - Weapon dmg Scalar, (12) - Chance, (25) - Explosion Radius
+
+        // 7447 TODO notes
+        // Rune_C cone damage SF(2)-SF(3)
+        // Rune_D side beam damage SF(7)-SF(26)
+        // Rune_E explosion chance SF(12) with damage of SF(9)-SF(13) within radius of SF(25)
 
         const float BeamLength = 40f;
 
@@ -645,8 +650,8 @@ namespace D3BEmu.Core.GS.Powers.Implementations
             EffectsPerSecond = ScriptFormula(18);
 
             _calcTargetPosition();
-            _target = SpawnEffect(RuneSelect(52687, 52687, 93544, -1, 52687, 215723), TargetPosition, 0, WaitInfinite());
-            User.AddComplexEffect(RuneSelect(18792, 18792, 93529, -1, 93593, 216368), _target);
+            _target = SpawnEffect(RuneSelect(52687, 52687, 93544, -1, 52687, 52687), TargetPosition, 0, WaitInfinite());   // Effects 215723 and 216368 for Rune_E don't exist in 7447
+            User.AddComplexEffect(RuneSelect(18792, 18792, 93529, -1, 93593, 18792), _target);
         }
 
         public override void OnChannelClose()
@@ -664,23 +669,20 @@ namespace D3BEmu.Core.GS.Powers.Implementations
 
         public override IEnumerable<TickTimer> Main()
         {
-            UsePrimaryResource(ScriptFormula(22));
+            UsePrimaryResource(EvalTag(PowerKeys.ResourceCost));
 
             foreach (Actor actor in GetEnemiesInRadius(User.Position, BeamLength + 10f).Actors)
             {
-                if (Rune_B > 0)
+                if (PowerMath.PointInBeam(actor.Position, User.Position, TargetPosition, (Rune_B > 0) ? 6f : 3f))
                 {
-                    if (PowerMath.PointInBeam(actor.Position, User.Position, TargetPosition, 6f))
+                    if (Rune_A > 0 || Rune_B > 0)
                     {
-                        //ScriptFormula(1)
-                        WeaponDamage(actor, ScriptFormula(1) * EffectsPerSecond, DamageType.Arcane);
+                        Damage(actor, ScriptFormula(23) * EffectsPerSecond, ScriptFormula(24) * EffectsPerSecond, DamageType.Arcane);
                     }
-                }
-                else
-                    if (PowerMath.PointInBeam(actor.Position, User.Position, TargetPosition, 3f))
-                {
-                    //ScriptFormula(1)
-                    WeaponDamage(actor, ScriptFormula(1) * EffectsPerSecond, DamageType.Arcane);
+                    else
+                    {
+                        Damage(actor, ScriptFormula(0) * EffectsPerSecond, ScriptFormula(1) * EffectsPerSecond, DamageType.Arcane);
+                    }
                 }
             }
 
