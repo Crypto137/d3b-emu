@@ -707,7 +707,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
     }
     #endregion
 
-    // 9359 implementation
+    // 9359 implementation + 7447 calculations
     //Complete, Rune_E seems slow but correct i guess? - Once attack speed gets calculated in later, it will be correct.
     #region ExplosiveBlast
     [ImplementsPowerSNO(Skills.Skills.Wizard.Offensive.ExplosiveBlast)]
@@ -718,15 +718,14 @@ namespace D3BEmu.Core.GS.Powers.Implementations
             Vector3D blastspot = new Vector3D(User.Position);
             Actor blast = SpawnProxy(blastspot);
 
+            UsePrimaryResource(EvalTag(PowerKeys.ResourceCost));
+            StartCooldown(EvalTag(PowerKeys.CooldownTime));
+
             if (Rune_A > 0)
             {
-                UsePrimaryResource(ScriptFormula(15));
-                StartCooldown(EvalTag(PowerKeys.CooldownTime));
             }
             else
             {
-                UsePrimaryResource(ScriptFormula(15));
-                StartCooldown(EvalTag(PowerKeys.CooldownTime));
                 User.PlayEffectGroup(89449);
             }
 
@@ -736,8 +735,8 @@ namespace D3BEmu.Core.GS.Powers.Implementations
             {
                 SpawnEffect(61419, blastspot);
                 AttackPayload attack = new AttackPayload(this);
-                attack.Targets = GetEnemiesInRadius(User.Position, ScriptFormula(2));
-                attack.AddWeaponDamage(ScriptFormula(0), DamageType.Physical);
+                attack.Targets = GetEnemiesInRadius(blastspot, ScriptFormula(2));
+                attack.AddDamage(ScriptFormula(0), ScriptFormula(1), DamageType.Physical);
                 attack.Apply();
                 yield break;
             }
@@ -756,7 +755,16 @@ namespace D3BEmu.Core.GS.Powers.Implementations
             SpawnEffect(RuneSelect(61419, 61419, 192210, -1, 192211, -1), User.Position);
             AttackPayload attack = new AttackPayload(this);
             attack.Targets = GetEnemiesInRadius(User.Position, ScriptFormula(2));
-            attack.AddWeaponDamage(ScriptFormula(0), DamageType.Physical);
+
+            if (Rune_A > 0 || Rune_B > 0)
+            {
+                attack.AddDamage(ScriptFormula(0), ScriptFormula(1), DamageType.Physical);
+            }
+            else
+            {
+                attack.AddDamage(ScriptFormula(4), ScriptFormula(6), DamageType.Physical);
+            }
+
             attack.Apply();
             yield break;
         }
@@ -767,7 +775,7 @@ namespace D3BEmu.Core.GS.Powers.Implementations
                 SpawnEffect(61419, User.Position);
                 AttackPayload attack = new AttackPayload(this);
                 attack.Targets = GetEnemiesInRadius(User.Position, ScriptFormula(2));
-                attack.AddWeaponDamage(ScriptFormula(0), DamageType.Physical);
+                attack.AddDamage(ScriptFormula(0), ScriptFormula(1), DamageType.Physical);
                 attack.Apply();
                 yield return WaitSeconds(ScriptFormula(14));
             }
