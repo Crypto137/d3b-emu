@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>
  */
 
-using System.Windows;
+using System.Drawing;
 using D3BEmu.Core.GS.Common.Types.Math;
 
 // based on: http://www.krissteele.net/blogdetails.aspx?id=251
@@ -54,7 +54,7 @@ namespace D3BEmu.Core.GS.Common.Types.Misc
         /// Determines if a circle intersects a rectangle. 
         /// </summary> 
         /// <returns>True if the circle and rectangle overlap. False otherwise.</returns> 
-        public bool Intersects(Rect rectangle)
+        public bool Intersects(Rectangle rectangle)
         {
             // Find the closest point to the circle within the rectangle
             float closestX = Clamp(this.Center.X, (float)rectangle.Left, (float)rectangle.Right);
@@ -67,6 +67,21 @@ namespace D3BEmu.Core.GS.Common.Types.Misc
             // If the distance is less than the circle's radius, an intersection occurs
             float distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
             return distanceSquared < (this.Radius * this.Radius);
+        }
+
+        public bool Intersects(RectangleF rectangle)
+        {
+            // Find the closest point to the circle within the rectangle
+            float closestX = Clamp(Center.X, (float)rectangle.Left, (float)rectangle.Right);
+            float closestY = Clamp(Center.Y, (float)rectangle.Top, (float)rectangle.Bottom);
+
+            // Calculate the distance between the circle's center and this closest point
+            float distanceX = Center.X - closestX;
+            float distanceY = Center.Y - closestY;
+
+            // If the distance is less than the circle's radius, an intersection occurs
+            float distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
+            return distanceSquared < (Radius * Radius);
         }
 
         public static float Clamp(float value, float min, float max)

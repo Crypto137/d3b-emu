@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Windows;
+using System.Drawing;
 using D3BEmu.Core.GS.Common.Types.Misc;
 using D3BEmu.Core.GS.Objects;
 
@@ -69,16 +69,16 @@ namespace D3BEmu.Core.GS.Common.Types.QuadTrees
         {
             if (RootNode == null) // create a new root-node if it does not exist yet.
             {
-                var rootSize = new Size(System.Math.Ceiling(@object.Bounds.Width/MinimumLeafSize.Width),
-                                        System.Math.Ceiling(@object.Bounds.Height/MinimumLeafSize.Height));
+                var rootSize = new Size((int)System.Math.Ceiling(@object.Bounds.Width/MinimumLeafSize.Width),
+                                        (int)System.Math.Ceiling(@object.Bounds.Height/MinimumLeafSize.Height));
 
                 double multiplier = System.Math.Max(rootSize.Width, rootSize.Height);
-                rootSize = new Size(MinimumLeafSize.Width*multiplier, MinimumLeafSize.Height*multiplier);
-                var center = new Point(@object.Bounds.X + @object.Bounds.Width/2,
+                rootSize = new Size(MinimumLeafSize.Width * (int)multiplier, MinimumLeafSize.Height * (int)multiplier);
+                var center = new PointF(@object.Bounds.X + @object.Bounds.Width/2,
                                        @object.Bounds.Y + @object.Bounds.Height/2);
-                var rootOrigin = new Point(center.X - rootSize.Width/2, center.Y - rootSize.Height/2);
+                var rootOrigin = new PointF(center.X - rootSize.Width/2, center.Y - rootSize.Height/2);
 
-                this.RootNode = new QuadNode(new Rect(rootOrigin, rootSize));
+                this.RootNode = new QuadNode(new RectangleF(rootOrigin, rootSize));
             }
 
             while (!RootNode.Bounds.Contains(@object.Bounds))
@@ -96,7 +96,7 @@ namespace D3BEmu.Core.GS.Common.Types.QuadTrees
         /// <typeparam name="T">Type of object to query for.</typeparam>
         /// <param name="bounds">The bounds for query.</param>
         /// <returns>Returns list of objects.</returns>
-        public List<T> Query<T>(Rect bounds) where T : WorldObject
+        public List<T> Query<T>(RectangleF bounds) where T : WorldObject
         {
             var results = new List<T>();
             if (this.RootNode != null)
@@ -119,7 +119,7 @@ namespace D3BEmu.Core.GS.Common.Types.QuadTrees
         /// <param name="bounds">The bounds.</param>
         /// <param name="node">The node to queryy.</param>
         /// <param name="results">The objects found.</param>
-        private void Query<T>(Rect bounds, QuadNode node, List<T> results) where T : WorldObject
+        private void Query<T>(RectangleF bounds, QuadNode node, List<T> results) where T : WorldObject
         {
             if (node == null) return;
             if (!bounds.IntersectsWith(node.Bounds))
@@ -165,7 +165,7 @@ namespace D3BEmu.Core.GS.Common.Types.QuadTrees
         /// Expands the root node bounds.
         /// </summary>
         /// <param name="newChildBounds"></param>
-        private void ExpandRoot(Rect newChildBounds)
+        private void ExpandRoot(RectangleF newChildBounds)
         {
             bool isNorth = RootNode.Bounds.Y < newChildBounds.Y;
             bool isWest = RootNode.Bounds.X < newChildBounds.X;
@@ -181,7 +181,7 @@ namespace D3BEmu.Core.GS.Common.Types.QuadTrees
                               ? RootNode.Bounds.Y
                               : RootNode.Bounds.Y - RootNode.Bounds.Height;
 
-            var newRootBounds = new Rect(newX, newY, RootNode.Bounds.Width*2, RootNode.Bounds.Height*2);
+            var newRootBounds = new RectangleF((float)newX, (float)newY, RootNode.Bounds.Width*2, RootNode.Bounds.Height*2);
             var newRoot = new QuadNode(newRootBounds);
 
             this.SetupChildNodes(newRoot);

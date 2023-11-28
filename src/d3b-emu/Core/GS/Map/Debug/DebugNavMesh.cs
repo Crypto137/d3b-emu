@@ -18,7 +18,6 @@
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using D3BEmu.Common.Helpers.Concurrency;
 using D3BEmu.Core.GS.Actors;
 using D3BEmu.Core.GS.Players;
@@ -29,12 +28,12 @@ namespace D3BEmu.Core.GS.Map.Debug
     {
         public World World { get; private set; }
         public Player Player { get; private set; }
-        public Rect Bounds { get { return World.QuadTree.RootNode.Bounds; } }
+        public RectangleF Bounds { get { return World.QuadTree.RootNode.Bounds; } }
 
         public ConcurrentList<Scene> MasterScenes { get; private set; }
         public ConcurrentList<Scene> SubScenes { get; private set; }
-        public ConcurrentList<Rect> UnWalkableCells { get; private set; }
-        public ConcurrentList<Rect> WalkableCells { get; private set; }
+        public ConcurrentList<RectangleF> UnWalkableCells { get; private set; }
+        public ConcurrentList<RectangleF> WalkableCells { get; private set; }
         public ConcurrentList<Player> Players { get; private set; }
         public ConcurrentList<Monster> Monsters { get; private set; }
         public ConcurrentList<NPC> NPCs { get; private set; }
@@ -69,8 +68,8 @@ namespace D3BEmu.Core.GS.Map.Debug
 
             this.MasterScenes = new ConcurrentList<Scene>();
             this.SubScenes = new ConcurrentList<Scene>();
-            this.UnWalkableCells = new ConcurrentList<Rect>();
-            this.WalkableCells = new ConcurrentList<Rect>();
+            this.UnWalkableCells = new ConcurrentList<RectangleF>();
+            this.WalkableCells = new ConcurrentList<RectangleF>();
             this.Players = new ConcurrentList<Player>();
             this.Monsters = new ConcurrentList<Monster>();
             this.NPCs = new ConcurrentList<NPC>();           
@@ -127,7 +126,7 @@ namespace D3BEmu.Core.GS.Map.Debug
                 float sizex = cell.Max.X - cell.Min.X;
                 float sizey = cell.Max.Y - cell.Min.Y;
 
-                var rect = new Rect(x, y, sizex, sizey);
+                var rect = new RectangleF(x, y, sizex, sizey);
 
                 // TODO: Feature request: Also allow drawing of NavCellFlags.NOSpawn, NavCellFlags.LevelAreaBit0, NavCellFlags.LevelAreaBit1 cells. /raist.
 

@@ -109,7 +109,7 @@ namespace D3BEmu.Core.GS.AI
             }
             
             // Checks if our path start location is inside current scene, if it isnt, we reset curScene and set mPathfinder to the corrent grid.
-            if (!_curScene.Bounds.IntersectsWith(new System.Windows.Rect(Start.X, Start.Y, 1, 1)))
+            if (!_curScene.Bounds.IntersectsWith(new RectangleF(Start.X, Start.Y, 1, 1)))
             { 
                 _curScene = actor.CurrentScene;
                 if (!listOfPathFinderInstances.TryGetValue(_curScene.SceneSNO.Id, out mPathFinder))
@@ -125,7 +125,7 @@ namespace D3BEmu.Core.GS.AI
             _baseY = _curScene.Position.Y;
 
             // Path's start and destination are both in same scene.
-            if (_curScene.Bounds.IntersectsWith(new System.Windows.Rect(Destination.X, Destination.Y, 1, 1)))
+            if (_curScene.Bounds.IntersectsWith(new RectangleF(Destination.X, Destination.Y, 1, 1)))
             {
                 _destScene = _curScene; 
             }
@@ -134,7 +134,7 @@ namespace D3BEmu.Core.GS.AI
                 //Builds a new grid on the fly containing both the start and destination scenes. This is not really optimal, but its a trade off.
                 // Keeping grids Scene based means they can be used cross game even when laid out different in a seperate world. This keeps memory usage down substantially.
                 // Also limited to a max distance of scene > scene. Again this keeps memory usage low.
-                _destScene = _curScene.World.QuadTree.Query<Scene>(new System.Windows.Rect(Destination.X, Destination.Y, 1, 1)).FirstOrDefault();
+                _destScene = _curScene.World.QuadTree.Query<Scene>(new RectangleF(Destination.X, Destination.Y, 1, 1)).FirstOrDefault();
                 mPathFinder = new PathFinderFast(BuildOutOfSceneGrid(_curScene, _destScene, ref _baseX, ref _baseY));
                 InitPathFinder();
             }

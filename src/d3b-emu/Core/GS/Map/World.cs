@@ -19,7 +19,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
+using System.Drawing;
 using D3BEmu.Common.Helpers.Math;
 using D3BEmu.Common.Logging;
 using D3BEmu.Common.Storage;
@@ -740,7 +740,7 @@ namespace D3BEmu.Core.GS.Map
 
             foreach (Scene s in this._scenes.Values)
             {
-                if (s.Bounds.IntersectsWith(new Rect(location.X, location.Y, 1f, 1f)))
+                if (s.Bounds.IntersectsWith(new RectangleF(location.X, location.Y, 1f, 1f)))
                 {
                     /*if (s.DynamicID != QuadTree.Query<Scene>(new Common.Types.Misc.Circle(location.X, location.Y, 2f)).FirstOrDefault().DynamicID)
                     {
@@ -752,7 +752,7 @@ namespace D3BEmu.Core.GS.Map
                     {
                         foreach (var subscene in s.Subscenes)
                         {
-                            if (subscene.Bounds.IntersectsWith(new Rect(location.X, location.Y, 1f, 1f)))
+                            if (subscene.Bounds.IntersectsWith(new RectangleF(location.X, location.Y, 1f, 1f)))
                             {
                                 scene = subscene;
                             }

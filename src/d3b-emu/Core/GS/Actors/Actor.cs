@@ -17,7 +17,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
+using System.Drawing;
 using D3BEmu.Common.Logging;
 using D3BEmu.Core.GS.Actors.Implementations;
 using D3BEmu.Core.GS.Common.Types.Math;
@@ -641,7 +641,7 @@ namespace D3BEmu.Core.GS.Actors
 
         public List<T> GetObjectsInRegion<T>(int lenght = DefaultQueryProximityLenght) where T : WorldObject
         {
-            var proximityRectangle = new Rect(this.Position.X - lenght / 2, this.Position.Y - lenght / 2, lenght, lenght);
+            var proximityRectangle = new RectangleF(this.Position.X - lenght / 2, this.Position.Y - lenght / 2, lenght, lenght);
             return this.World.QuadTree.Query<T>(proximityRectangle);
         }
 

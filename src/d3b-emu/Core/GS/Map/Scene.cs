@@ -17,7 +17,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows;
+using System.Drawing;
 using D3BEmu.Common.Logging;
 using D3BEmu.Common.MPQ;
 using D3BEmu.Core.GS.Actors;
@@ -142,7 +142,7 @@ namespace D3BEmu.Core.GS.Map
             this.Scale = 1.0f;
             this.AppliedLabels = new int[0];
             this.LoadSceneData(); // load data from mpqs.
-            this.Size = new Size(this.NavZone.V0.X * this.NavZone.Float0, this.NavZone.V0.Y * this.NavZone.Float0);
+            this.Size = new Size(this.NavZone.V0.X * (int)this.NavZone.Float0, this.NavZone.V0.Y * (int)this.NavZone.Float0);
             this.Position = position;
             this.World.AddScene(this); // add scene to the world.
         }

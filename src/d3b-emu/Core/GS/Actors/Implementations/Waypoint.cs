@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>
  */
 
-using System.Windows;
+using System.Drawing;
 using D3BEmu.Common.MPQ;
 using D3BEmu.Core.GS.Common.Types.SNO;
 using D3BEmu.Core.GS.Map;
@@ -49,7 +49,7 @@ namespace D3BEmu.Core.GS.Actors.Implementations
             var actData = (D3BEmu.Common.MPQ.FileFormats.Act)MPQStorage.Data.Assets[SNOGroup.Act][70015].Data;
             var wayPointInfo = actData.WayPointInfo;
 
-            var proximity = new Rect(this.Position.X - 1.0, this.Position.Y - 1.0, 2.0, 2.0);
+            var proximity = new RectangleF(this.Position.X - 1.0f, this.Position.Y - 1.0f, 2.0f, 2.0f);
             var scenes = this.World.QuadTree.Query<Scene>(proximity);
             if (scenes.Count == 0) return; // TODO: fixme! /raist
 

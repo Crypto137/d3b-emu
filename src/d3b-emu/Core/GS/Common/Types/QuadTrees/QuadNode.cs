@@ -19,7 +19,7 @@
 
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
-using System.Windows;
+using System.Drawing;
 using D3BEmu.Core.GS.Objects;
 
 namespace D3BEmu.Core.GS.Common.Types.QuadTrees
@@ -94,13 +94,13 @@ namespace D3BEmu.Core.GS.Common.Types.QuadTrees
         /// <summary>
         /// The bounds for node.
         /// </summary>
-        public Rect Bounds { get; internal set; }
+        public RectangleF Bounds { get; internal set; }
 
         /// <summary>
         /// Creates a new QuadNode with given bounds.
         /// </summary>
         /// <param name="bounds">The bounds for node.</param>
-        public QuadNode(Rect bounds)
+        public QuadNode(RectangleF bounds)
         {
             Bounds = bounds;
             Nodes = new ReadOnlyCollection<QuadNode>(_nodes);
@@ -114,7 +114,7 @@ namespace D3BEmu.Core.GS.Common.Types.QuadTrees
         /// <param name="width">The width of the region.</param>
         /// <param name="height">The height of the region</param>
         public QuadNode(double x, double y, double width, double height)
-            : this(new Rect(x, y, width, height))
+            : this(new RectangleF((float)x, (float)y, (float)width, (float)height))
         { }
 
         /// <summary>

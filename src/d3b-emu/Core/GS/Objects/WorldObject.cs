@@ -16,7 +16,7 @@
  */
 
 using System;
-using System.Windows;
+using System.Drawing;
 using D3BEmu.Core.GS.Actors;
 using D3BEmu.Core.GS.Common.Types.Math;
 using D3BEmu.Core.GS.Map;
@@ -44,7 +44,7 @@ namespace D3BEmu.Core.GS.Objects
             get { return _position; }
             set { 
                 _position = value;
-                this.Bounds = new Rect(this.Position.X, this.Position.Y, this.Size.Width, this.Size.Height);
+                this.Bounds = new RectangleF(this.Position.X, this.Position.Y, this.Size.Width, this.Size.Height);
                 var handler = PositionChanged;
                 if (handler != null) handler(this, EventArgs.Empty);
             }
@@ -63,7 +63,7 @@ namespace D3BEmu.Core.GS.Objects
         /// <summary>
         /// Automatically calculated bounds for object used by QuadTree.
         /// </summary>
-        public Rect Bounds { get; private set; }
+        public RectangleF Bounds { get; private set; }
 
         /// <summary>
         /// Scale of the object.
